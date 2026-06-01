@@ -13,8 +13,7 @@ export function renderHero(items, type = 'movie') {
 
   function buildSlide(item) {
     return `
-      <div class="hero__slide">
-        <img class="hero__bg" src="${getBackdropURL(item.backdrop_path)}" alt="" crossorigin="anonymous"/>
+      <div class="hero__slide" style="background-image: url('${getBackdropURL(item.backdrop_path)}')">
         <div class="hero__overlay">
           <div class="hero__content">
             <h1 class="hero__title">${getTitle(item)}</h1>

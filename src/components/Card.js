@@ -24,7 +24,7 @@ export function createSeriesCard(series) {
 
   card.innerHTML = `
     <div class="card__poster">
-      <img src="${getPosterURL(series.poster_path)}" alt="${series.name}" loading="lazy" crossorigin="anonymous"/>
+      <img src="${getPosterURL(series.poster_path)}" alt="${series.name}" loading="lazy"/>
       <span class="card__rating">⭐ ${formatRating(series.vote_average)}</span>
     </div>
     <div class="card__info">
