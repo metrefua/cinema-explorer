@@ -1,13 +1,11 @@
-import { IMAGE_BASE_URL, IMAGE_SIZES } from './constants.js';
-
-export function getPosterURL(path, size = IMAGE_SIZES.poster) {
-  if (!path) return '/assets/hero.png';
-  return `${IMAGE_BASE_URL}/${size}${path}`;
+export function getPosterURL(path) {
+  if (!path) return 'https://via.placeholder.com/500x750?text=No+Image';
+  return `https://image.tmdb.org/t/p/w500${path}`;
 }
 
 export function getBackdropURL(path) {
-  if (!path) return '/assets/hero.png';
-  return `${IMAGE_BASE_URL}/${IMAGE_SIZES.backdrop}${path}`;
+  if (!path) return 'https://via.placeholder.com/1280x720?text=No+Image';
+  return `https://image.tmdb.org/t/p/original${path}`;
 }
 
 export function formatRating(rating) {
