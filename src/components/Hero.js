@@ -10,18 +10,31 @@ export function renderHero(items, type = 'movie') {
 
   function getTitle(item) {
     if (type === 'movie') return item.title;
-    if (type === 'series') return item.name;
     return item.name;
   }
 
+  function getDetailHash(item) {
+    if (type === 'movie') return `#/detail/movie/${item.id}`;
+    if (type === 'series') return `#/detail/series/${item.id}`;
+    return `#/detail/person/${item.id}`;
+  }
+
   function buildSlide(item) {
+    const genres = item.genre_ids?.slice(0, 3).map(id =>
+      `<span class="hero__genre">${id}</span>`
+    ).join('') || '';
+
     return `
       <div class="hero__slide" style="background-image: url('${getBackdropURL(item.backdrop_path)}')">
         <div class="hero__overlay">
           <div class="hero__content">
+            <div class="hero__genres">${genres}</div>
             <h1 class="hero__title">${getTitle(item)}</h1>
             <p class="hero__overview">${item.overview?.slice(0, 150) || ''}...</p>
-            ${item.vote_average ? `<span class="hero__rating">⭐ ${formatRating(item.vote_average)}</span>` : ''}
+            <div class="hero__actions">
+              ${item.vote_average ? `<span class="hero__rating">⭐ ${formatRating(item.vote_average)}</span>` : ''}
+              <a href="${getDetailHash(item)}" class="hero__detail-btn">Detail It</a>
+            </div>
           </div>
         </div>
       </div>
@@ -55,7 +68,6 @@ export function renderHero(items, type = 'movie') {
 
   intervalId = setInterval(() => goTo(currentIndex + 1), 5000);
 
-  // clear interval when section is removed from DOM
   const observer = new MutationObserver(() => {
     if (!document.contains(section)) {
       clearInterval(intervalId);

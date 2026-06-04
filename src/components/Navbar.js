@@ -4,22 +4,23 @@ export function renderNavbar() {
 
   nav.innerHTML = `
     <div class="navbar__logo">
-      <a href="#/">🎬 CineExplorer</a>
+      <a href="#/">🍿 CineExplorer</a>
     </div>
-    <button class="navbar__hamburger" id="hamburger" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
     <ul class="navbar__links" id="navbar-links">
       <li><a href="#/" class="nav-link" data-route="#/">Home</a></li>
       <li><a href="#/movies" class="nav-link" data-route="#/movies">Movies</a></li>
       <li><a href="#/series" class="nav-link" data-route="#/series">Series</a></li>
       <li><a href="#/celebrities" class="nav-link" data-route="#/celebrities">Celebrities</a></li>
     </ul>
+    <div class="navbar__search">
+      <input type="text" class="navbar__search-input" id="search-input" placeholder="Search for movies or shows..."/>
+      <button class="navbar__search-btn" id="search-btn" aria-label="Search">🔍</button>
+    </div>
+    <button class="navbar__hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
   `;
 
-  // active link
   function updateActiveLink() {
     const hash = window.location.hash || '#/';
     nav.querySelectorAll('.nav-link').forEach(link => {
@@ -30,7 +31,6 @@ export function renderNavbar() {
   updateActiveLink();
   window.addEventListener('hashchange', updateActiveLink);
 
-  // hamburger toggle
   const hamburger = nav.querySelector('#hamburger');
   const links = nav.querySelector('#navbar-links');
 
@@ -39,12 +39,26 @@ export function renderNavbar() {
     hamburger.classList.toggle('open');
   });
 
-  // close menu on link click
   nav.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
       links.classList.remove('open');
       hamburger.classList.remove('open');
     });
+  });
+
+  // search
+  const searchBtn = nav.querySelector('#search-btn');
+  const searchInput = nav.querySelector('#search-input');
+
+  function doSearch() {
+    const query = searchInput.value.trim();
+    if (!query) return;
+    window.location.hash = `#/search/${encodeURIComponent(query)}`;
+  }
+
+  searchBtn.addEventListener('click', doSearch);
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doSearch();
   });
 
   return nav;

@@ -3,6 +3,7 @@ import { renderMovies } from '../pages/movies.js';
 import { renderSeries } from '../pages/series.js';
 import { renderCelebrities } from '../pages/celebrities.js';
 import { renderDetail } from '../pages/detail.js';
+import { renderSearch } from '../pages/search.js';
 
 const routes = {
   '#/': renderHome,
@@ -21,6 +22,11 @@ export function initRouter() {
 
     if (hash.startsWith('#/detail/')) {
       renderDetail();
+      return;
+    }
+
+    if (hash.startsWith('#/search/')) {
+      renderSearch();
       return;
     }
 
