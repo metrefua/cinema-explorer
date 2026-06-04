@@ -2,6 +2,7 @@ import { renderHome } from '../pages/home.js';
 import { renderMovies } from '../pages/movies.js';
 import { renderSeries } from '../pages/series.js';
 import { renderCelebrities } from '../pages/celebrities.js';
+import { renderDetail } from '../pages/detail.js';
 
 const routes = {
   '#/': renderHome,
@@ -17,15 +18,16 @@ export function navigate(hash) {
 export function initRouter() {
   function handleRoute() {
     const hash = window.location.hash || '#/';
-    const renderFn = routes[hash];
 
-    if (renderFn) {
-      renderFn();
-    } else {
-      renderHome();
+    if (hash.startsWith('#/detail/')) {
+      renderDetail();
+      return;
     }
+
+    const renderFn = routes[hash] || renderHome;
+    renderFn();
   }
 
   window.addEventListener('hashchange', handleRoute);
-  handleRoute(); // run on first load
+  handleRoute();
 }
