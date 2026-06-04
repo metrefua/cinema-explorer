@@ -6,45 +6,41 @@ import { renderPagination } from '../components/Pagination.js';
 import { createMovieCard } from '../components/Card.js';
 import { getNowPlayingMovies, getTrendingMovies, getMoviesByGenre } from '../api/movieService.js';
 import { getMovieGenres } from '../api/genreService.js';
+import { renderPageSkeleton } from '../components/Skeleton.js';
 
-let currentPage = 1;
 let currentGenreId = null;
 
-async function loadGenreMovies(app, genreId, page = 1) {
+async function loadGenreMovies(genreSection, paginationContainer, genreId, page = 1) {
   currentGenreId = genreId;
-  currentPage = page;
+  genreSection.innerHTML = '<p style="color:var(--text-muted);padding:1rem;">Loading...</p>';
+  paginationContainer.innerHTML = '';
 
   const data = await getMoviesByGenre(genreId, page);
 
-  const existing = app.querySelector('.genre-section');
-  if (existing) existing.remove();
-
-  const existingPagination = app.querySelector('.pagination');
-  if (existingPagination) existingPagination.remove();
-
-  const section = document.createElement('section');
-  section.className = 'section genre-section';
-  section.innerHTML = `<h2 class="section__title">Genre Movies</h2>`;
-
+  genreSection.innerHTML = '<h2 class="section__title">Genre Movies</h2>';
   const grid = document.createElement('div');
   grid.className = 'cards-grid';
 
+  if (!data.results.length) {
+    genreSection.innerHTML += '<p style="color:var(--text-muted);padding:1rem;">No results found.</p>';
+    return;
+  }
+
   data.results.forEach(movie => grid.appendChild(createMovieCard(movie)));
-  section.appendChild(grid);
+  genreSection.appendChild(grid);
 
-  const layout = app.querySelector('.movies-layout');
-  layout.appendChild(section);
-
-  const pagination = renderPagination(page, data.total_pages, (newPage) => {
-    loadGenreMovies(app, genreId, newPage);
-  });
-
-  app.querySelector('main').appendChild(pagination);
+  paginationContainer.appendChild(
+    renderPagination(page, data.total_pages, (newPage) => {
+      loadGenreMovies(genreSection, paginationContainer, genreId, newPage);
+    })
+  );
 }
 
 export async function renderMovies() {
   const app = document.getElementById('app');
-  app.innerHTML = '<div class="loader">Loading...</div>';
+  app.innerHTML = '';
+  app.appendChild(renderNavbar());
+  app.appendChild(renderPageSkeleton());
 
   try {
     const [nowPlaying, trendingMovies, genres] = await Promise.all([
@@ -63,31 +59,41 @@ export async function renderMovies() {
     // trending section
     const trendingSection = document.createElement('section');
     trendingSection.className = 'section';
-    trendingSection.innerHTML = `<h2 class="section__title">Trending Movies</h2>`;
+    trendingSection.innerHTML = '<h2 class="section__title">Trending Movies</h2>';
     const trendingGrid = document.createElement('div');
     trendingGrid.className = 'cards-grid';
     trendingMovies.results.slice(0, 10).forEach(m => trendingGrid.appendChild(createMovieCard(m)));
     trendingSection.appendChild(trendingGrid);
     main.appendChild(trendingSection);
 
-    // layout with sidebar
+    // sidebar + genre content side by side
     const layout = document.createElement('div');
     layout.className = 'movies-layout';
 
     const sidebar = renderSidebar(genres.genres, (genreId) => {
-      loadGenreMovies(app, genreId, 1);
-    });
+      loadGenreMovies(genreSection, paginationContainer, genreId, 1);
+    }, genres.genres[0].id);
 
+    const rightCol = document.createElement('div');
+    rightCol.className = 'movies-content';
+
+    const genreSection = document.createElement('section');
+    genreSection.className = 'section';
+
+    const paginationContainer = document.createElement('div');
+
+    rightCol.appendChild(genreSection);
+    rightCol.appendChild(paginationContainer);
     layout.appendChild(sidebar);
+    layout.appendChild(rightCol);
     main.appendChild(layout);
     app.appendChild(main);
     app.appendChild(renderFooter());
 
-    // load first genre by default
-    await loadGenreMovies(app, genres.genres[0].id, 1);
+    await loadGenreMovies(genreSection, paginationContainer, genres.genres[0].id, 1);
 
   } catch (err) {
-    app.innerHTML = `<p class="error">Something went wrong. Please try again.</p>`;
+    app.innerHTML = '<p class="error">Something went wrong. Please try again.</p>';
     console.error(err);
   }
 }
