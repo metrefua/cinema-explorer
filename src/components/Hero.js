@@ -6,20 +6,17 @@ export function renderHero(items, type = 'movie') {
 
   const slides = items.slice(0, 5);
   let currentIndex = 0;
+  let intervalId = null;
 
   function getTitle(item) {
-    return type === 'movie' ? item.title : type === 'series' ? item.name : item.name;
+    if (type === 'movie') return item.title;
+    if (type === 'series') return item.name;
+    return item.name;
   }
 
   function buildSlide(item) {
     return `
-      <div class="hero__slide">
-        <img 
-          class="hero__bg" 
-          src="${getBackdropURL(item.backdrop_path)}" 
-          alt="${getTitle(item)}"
-          referrerpolicy="no-referrer"
-        />
+      <div class="hero__slide" style="background-image: url('${getBackdropURL(item.backdrop_path)}')">
         <div class="hero__overlay">
           <div class="hero__content">
             <h1 class="hero__title">${getTitle(item)}</h1>
@@ -38,11 +35,10 @@ export function renderHero(items, type = 'movie') {
     <div class="hero__dots">
       ${slides.map((_, i) => `<span class="hero__dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`).join('')}
     </div>
-    <button class="hero__btn hero__btn--prev">&#8249;</button>
-    <button class="hero__btn hero__btn--next">&#8250;</button>
+    <button class="hero__btn hero__btn--prev" aria-label="Previous slide">&#8249;</button>
+    <button class="hero__btn hero__btn--next" aria-label="Next slide">&#8250;</button>
   `;
 
-  // carousel logic
   const carousel = section.querySelector('.hero__carousel');
   const dots = section.querySelectorAll('.hero__dot');
 
@@ -57,8 +53,16 @@ export function renderHero(items, type = 'movie') {
   section.querySelector('.hero__btn--prev').addEventListener('click', () => goTo(currentIndex - 1));
   dots.forEach(dot => dot.addEventListener('click', () => goTo(+dot.dataset.index)));
 
-  // auto play
-  setInterval(() => goTo(currentIndex + 1), 5000);
+  intervalId = setInterval(() => goTo(currentIndex + 1), 5000);
+
+  // clear interval when section is removed from DOM
+  const observer = new MutationObserver(() => {
+    if (!document.contains(section)) {
+      clearInterval(intervalId);
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
 
   return section;
 }
