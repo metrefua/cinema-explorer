@@ -5,25 +5,24 @@ import { createMovieCard, createSeriesCard, createPeopleCard } from '../componen
 import { getNowPlayingMovies, getTrendingMovies } from '../api/movieService.js';
 import { getTrendingSeries } from '../api/seriesService.js';
 import { getTrendingPeople } from '../api/peopleService.js';
+import { renderPageSkeleton } from '../components/Skeleton.js';
 
 function createSection(title, items, cardFn) {
   const section = document.createElement('section');
   section.className = 'section';
-
   section.innerHTML = `<h2 class="section__title">${title}</h2>`;
-
   const grid = document.createElement('div');
   grid.className = 'cards-grid';
-
   items.forEach(item => grid.appendChild(cardFn(item)));
   section.appendChild(grid);
-
   return section;
 }
 
 export async function renderHome() {
   const app = document.getElementById('app');
-  app.innerHTML = '<div class="loader">Loading...</div>';
+  app.innerHTML = '';
+  app.appendChild(renderNavbar());
+  app.appendChild(renderPageSkeleton());
 
   try {
     const [nowPlaying, trendingMovies, trendingSeries, trendingPeople] = await Promise.all([
@@ -35,7 +34,6 @@ export async function renderHome() {
 
     app.innerHTML = '';
     app.appendChild(renderNavbar());
-
     app.appendChild(renderHero(nowPlaying.results, 'movie'));
 
     const main = document.createElement('main');
@@ -49,7 +47,7 @@ export async function renderHome() {
     app.appendChild(renderFooter());
 
   } catch (err) {
-    app.innerHTML = `<p class="error">Something went wrong. Please try again.</p>`;
+    app.innerHTML = '<p class="error">Something went wrong. Please try again.</p>';
     console.error(err);
   }
 }
