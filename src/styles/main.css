@@ -375,6 +375,237 @@ img { max-width: 100%; display: block; }
   align-items: center;
 }
 
+.movies-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* HAMBURGER  */
+.navbar__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.navbar__hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all var(--transition);
+}
+
+.navbar__hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.navbar__hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar__hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* DETAIL PAGE */
+.detail__hero {
+  min-height: 450px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.detail__hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.92) 50%, rgba(0,0,0,0.4));
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 2.5rem 3rem;
+}
+
+.detail__poster {
+  width: 200px;
+  min-width: 200px;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+.detail__hero-info { flex: 1; }
+
+.detail__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.detail__badge {
+  background: rgba(255,255,255,0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.detail__badge--genre {
+  background: var(--accent);
+  color: white;
+}
+
+.detail__overview {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+.detail__cast {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.detail__cast-card {
+  text-align: center;
+}
+
+.detail__cast-card img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+}
+
+.detail__cast-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail__cast-role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail__person {
+  display: flex;
+  gap: 2.5rem;
+  padding: 2.5rem 0;
+  align-items: flex-start;
+}
+
+.detail__person-img {
+  width: 250px;
+  min-width: 250px;
+  border-radius: var(--radius);
+}
+
+.detail__person-info { flex: 1; }
+
+/* card cursor */
+.card { cursor: pointer; }
+
+@media (max-width: 768px) {
+  .detail__hero-overlay {
+    flex-direction: column;
+    padding: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .detail__poster { width: 140px; min-width: 140px; }
+  .detail__title { font-size: 1.4rem; }
+  .detail__person { flex-direction: column; }
+  .detail__person-img { width: 100%; min-width: unset; }
+}
+
+@media (max-width: 768px) {
+  .navbar__hamburger { display: flex; }
+
+  .navbar__links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--bg-nav);
+    padding: 1rem 2rem;
+    gap: 1rem;
+    z-index: 99;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .navbar__links.open { display: flex; }
+}
+
+/* SKELETONS  */
+@keyframes shimmer {
+  0% { background-position: -700px 0; }
+  100% { background-position: 700px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1a1a2e 25%, #2a2a4e 50%, #1a1a2e 75%);
+  background-size: 700px 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius);
+}
+
+.skeleton--hero {
+  width: 100%;
+  height: 500px;
+  border-radius: 0;
+}
+
+.skeleton--poster {
+  width: 100%;
+  aspect-ratio: 2/3;
+}
+
+.skeleton--title {
+  height: 14px;
+  width: 80%;
+  margin: 10px 8px 6px;
+}
+
+.skeleton--year {
+  height: 12px;
+  width: 40%;
+  margin: 0 8px 10px;
+}
+
+.skeleton--section-title {
+  height: 20px;
+  width: 200px;
+  margin-bottom: 1.2rem;
+}
+
+.skeleton-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.skeleton-info { padding: 0 0 0.5rem; }
 
 /*  RESPONSIVE  */
 @media (max-width: 768px) {
