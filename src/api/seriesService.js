@@ -1,35 +1,18 @@
-import { API_BASE_URL } from '../utils/constants.js';
+import { apiFetch } from './apiClient.js';
 
-const TOKEN = import.meta.env.VITE_TMDB_TOKEN;
+const BASE = 'https://api.themoviedb.org/3';
 
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${TOKEN}`,
-  },
-};
+export const getOnAirSeries = (page = 1) =>
+  apiFetch(`${BASE}/tv/on_the_air?language=en-US&page=${page}`);
 
-export async function getOnAirSeries(page = 1) {
-  const res = await fetch(`${API_BASE_URL}/tv/on_the_air?language=en-US&page=${page}`, options);
-  const data = await res.json();
-  return data;
-}
+export const getTrendingSeries = () =>
+  apiFetch(`${BASE}/trending/tv/week`);
 
-export async function getTrendingSeries() {
-  const res = await fetch(`${API_BASE_URL}/trending/tv/week`, options);
-  const data = await res.json();
-  return data;
-}
+export const getPopularSeries = (page = 1) =>
+  apiFetch(`${BASE}/tv/popular?language=en-US&page=${page}`);
 
-export async function getPopularSeries(page = 1) {
-  const res = await fetch(`${API_BASE_URL}/tv/popular?language=en-US&page=${page}`, options);
-  const data = await res.json();
-  return data;
-}
+export const getSeriesByGenre = (genreId, page = 1) =>
+  apiFetch(`${BASE}/discover/tv?with_genres=${genreId}&page=${page}&language=en-US`);
 
-export async function getSeriesByGenre(genreId, page = 1) {
-  const res = await fetch(`${API_BASE_URL}/discover/tv?with_genres=${genreId}&page=${page}&language=en-US`, options);
-  const data = await res.json();
-  return data;
-}
+export const getSeriesDetails = (id) =>
+  apiFetch(`${BASE}/tv/${id}?language=en-US&append_to_response=credits`);

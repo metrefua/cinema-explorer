@@ -4,6 +4,7 @@ import { renderHero } from '../components/Hero.js';
 import { renderPagination } from '../components/Pagination.js';
 import { createPeopleCard } from '../components/Card.js';
 import { getTrendingPeople, getPopularPeople } from '../api/peopleService.js';
+import { renderPageSkeleton } from '../components/Skeleton.js';
 
 async function loadPeoplePage(app, page = 1) {
   const data = await getPopularPeople(page);
@@ -36,7 +37,9 @@ async function loadPeoplePage(app, page = 1) {
 
 export async function renderCelebrities() {
   const app = document.getElementById('app');
-  app.innerHTML = '<div class="loader">Loading...</div>';
+  app.innerHTML = '';
+  app.appendChild(renderNavbar());
+  app.appendChild(renderPageSkeleton());
 
   try {
     const trendingPeople = await getTrendingPeople();

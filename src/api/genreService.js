@@ -1,23 +1,9 @@
-import { API_BASE_URL } from '../utils/constants.js';
+import { apiFetch } from './apiClient.js';
 
-const TOKEN = import.meta.env.VITE_TMDB_TOKEN;
+const BASE = 'https://api.themoviedb.org/3';
 
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${TOKEN}`,
-  },
-};
+export const getMovieGenres = () =>
+  apiFetch(`${BASE}/genre/movie/list?language=en`);
 
-export async function getMovieGenres() {
-  const res = await fetch(`${API_BASE_URL}/genre/movie/list?language=en`, options);
-  const data = await res.json();
-  return data;
-}
-
-export async function getTVGenres() {
-  const res = await fetch(`${API_BASE_URL}/genre/tv/list?language=en`, options);
-  const data = await res.json();
-  return data;
-}
+export const getTVGenres = () =>
+  apiFetch(`${BASE}/genre/tv/list?language=en`);
