@@ -15,6 +15,10 @@ export function createMovieCard(movie) {
     </div>
   `;
 
+  card.addEventListener('click', () => {
+    window.location.hash = `#/detail/movie/${movie.id}`;
+  });
+
   return card;
 }
 
@@ -32,6 +36,9 @@ export function createSeriesCard(series) {
       <p class="card__year">${formatDate(series.first_air_date)}</p>
     </div>
   `;
+  card.addEventListener('click', () => {
+    window.location.hash = `#/detail/series/${series.id}`;
+  });
 
   return card;
 }
@@ -49,6 +56,10 @@ export function createPeopleCard(person) {
       <p class="card__year">${person.known_for_department || ''}</p>
     </div>
   `;
+
+  card.addEventListener('click', () => {
+    window.location.hash = `#/detail/person/${person.id}`;
+  });
 
   return card;
 }
